@@ -1,0 +1,40 @@
+{
+  "name": "express-starter",
+  "version": "0.0.0",
+  "description": "express-starter",
+  "main": "app.js",
+  "scripts": {
+    "app": "node app.js"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js}": [
+      "eslint"
+    ],
+    "*.{js,json,html,css,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "author": "aihanjiao",
+  "license": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.1.0",
+    "eslint-config-prettier": "^6.11.0",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.6",
+    "prettier": "^2.0.5",
+    "standard-version": "^8.0.0"
+  }
+}
