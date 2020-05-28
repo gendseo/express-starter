@@ -1,11 +1,9 @@
 import express from "express";
 
-// import hello from "./user";
+import serveRoute from "./serve";
 
 const router = express.Router();
 
-router.get("/", function (req, res) {
-  res.send("hello");
-});
+router.use("/", serveRoute);
 
-export default router;
+module.exports = router;

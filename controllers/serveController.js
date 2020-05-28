@@ -1,1 +1,3 @@
-exports.pong = () => {};
+exports.pong = (req, res) => {
+  res.send("hello");
+};

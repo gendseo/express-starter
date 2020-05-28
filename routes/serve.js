@@ -1,9 +1,8 @@
 import express from "express";
+import serveController from "../controllers/serveController";
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.send("hello");
-});
+router.get("/", serveController.pong);
 
 module.exports = router;
