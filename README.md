@@ -33,3 +33,19 @@ express-starter is a quick boot cli.
 ### Logs
 
 - [morgan](https://github.com/expressjs/morgan) - HTTP request logger middleware for node.js
+
+### Using es6 snytax by babel
+
+```bash
+npm i -D @babel/core @babel/preset-env @babel/register
+```
+
+```js
+// register babel plugin
+// Transpile all code following this line with babel and use '@babel/preset-env' (aka ES6) preset.
+require("@babel/register")({
+  presets: ["@babel/preset-env"],
+});
+```
+
+// TODO
