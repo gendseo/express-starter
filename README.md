@@ -48,4 +48,14 @@ require("@babel/register")({
 });
 ```
 
-// TODO
+## TODO
+
+### 1、接口文档
+
+- jsdoc
+- swagger
+
+### 2、用户-角色权限-资源管理设计
+
+- casbin
+- 数据库动态赠删改查
