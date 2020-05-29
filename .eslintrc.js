@@ -5,8 +5,10 @@ module.exports = {
     es6: true,
   },
   extends: ["eslint:recommended", "prettier", "plugin:prettier/recommended"],
+  parser: "babel-eslint",
   parserOptions: {
-    parser: "babel-eslint",
+    sourceType: "module",
+    allowImportExportEverywhere: true,
   },
   rules: {
     "no-console": 0, //禁止使用console
@@ -115,7 +117,7 @@ module.exports = {
     // "no-with": 2, //禁用with
     //
     // "array-bracket-spacing": [2, "never"], //是否允许非空数组里面有多余的空格
-    // "arrow-parens": 0, //箭头函数用小括号括起来
+    "arrow-parens": 0, //箭头函数用小括号括起来
     // "arrow-spacing": 0, //=>的前/后括号
     // "accessor-pairs": 0, //在对象中使用getter/setter
     // "block-scoped-var": 0, //块语句中使用var

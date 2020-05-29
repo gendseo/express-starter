@@ -5,12 +5,8 @@
 
 "use strict";
 
-import express from "express";
+import serve from "./serve";
 
-import serveRoute from "./serve";
-
-const router = express.Router();
-
-router.use("/", serveRoute);
-
-module.exports = router;
+export default (app) => {
+  app.use("/", serve);
+};

@@ -31,6 +31,11 @@ express-starter is a quick boot cli.
 - [mongoose](https://github.com/Automattic/mongoose) - ORM
 - [connect-mongo](https://github.com/jdesboeufs/connect-mongo) - MongoDB session store for Express
 
+### API doc
+
+- [swagger-jsdoc](https://github.com/Surnet/swagger-jsdoc) - Generates swagger doc based on JSDoc.
+- [swagger-ui-express](https://github.com/scottie1984/swagger-ui-express) - Adds middleware to your express app to serve the Swagger UI bound to your Swagger document. This acts as living documentation for your API hosted from within your app.
+
 ### Using es6 snytax by babel
 
 ```bash
