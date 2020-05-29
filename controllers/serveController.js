@@ -1,3 +1,10 @@
+/*!
+ * 2020-5-28
+ * Copyright©aihanjiao
+ */
+
+"use strict";
+
 exports.pong = (req, res) => {
   res.send("hello");
 };

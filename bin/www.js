@@ -1,5 +1,5 @@
 /*!
- * 2020年5月28日
+ * 2020-5-28
  * Copyright©aihanjiao
  */
 
@@ -18,7 +18,6 @@ import helmet from "helmet";
 import csrf from "csurf";
 
 import router from "../routes/index";
-import { strict } from "assert";
 
 dotenv.config(); // inject dotenv configuration before creating express instance
 const app = express(); // create express instance
@@ -42,12 +41,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(cors());
 app.use(helmet());
-app.use(logger(`:remote-addr - [:date[clf]] ":method :url HTTP/:http-version" :status`));
+app.use(logger(`:remote-addr - [:date[iso]]  ":method  :url  HTTP/:http-version  :response-time ms"  :status`));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
-    store: new MongoStore({ mongooseConnection: connection, ttl: 60 }),
+    store: new MongoStore({ mongooseConnection: connection, ttl: process.env.SESSION_MAXAGE }),
   })
 );
 app.use(csrf({ cookie: true }));

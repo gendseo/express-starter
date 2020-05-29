@@ -1,3 +1,10 @@
+/*!
+ * 2020-5-28
+ * Copyright©aihanjiao
+ */
+
+"use strict";
+
 import express from "express";
 import serveController from "../controllers/serveController";
 
