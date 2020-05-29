@@ -1,7 +1,9 @@
-/**
+/*!
  * 2020年5月28日
  * Copyright©aihanjiao
  */
+
+"use strict";
 
 import express from "express";
 import session from "express-session";
@@ -12,8 +14,11 @@ import logger from "morgan";
 import path from "path";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+import helmet from "helmet";
+import csrf from "csurf";
 
 import router from "../routes/index";
+import { strict } from "assert";
 
 dotenv.config(); // inject dotenv configuration before creating express instance
 const app = express(); // create express instance
@@ -36,6 +41,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(cors());
+app.use(helmet());
 app.use(logger(`:remote-addr - [:date[clf]] ":method :url HTTP/:http-version" :status`));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
@@ -44,6 +50,7 @@ app.use(
     store: new MongoStore({ mongooseConnection: connection, ttl: 60 }),
   })
 );
+app.use(csrf({ cookie: true }));
 
 /**
  * register router

@@ -17,22 +17,19 @@ express-starter is a quick boot cli.
 ### Back-end Framework
 
 - [express](https://github.com/expressjs/express)
-- [express-session](https://github.com/expressjs/session) - Simple session middleware for Express
-- [cors](https://github.com/expressjs/cors) - Node.js CORS middleware
+- [express-session](https://github.com/expressjs/session) - Simple session middleware for Express.
+- [cors](https://github.com/expressjs/cors) - Node.js CORS middleware.
+- [csurf](https://github.com/expressjs/csurf) - Node.js CSRF protection middleware.
+- [morgan](https://github.com/expressjs/morgan) - HTTP request logger middleware for node.js.
+- [dotenv](https://github.com/motdotla/dotenv) - Loads environment variables from .env for nodejs projects.
+- [pm2](https://github.com/Unitech/pm2) - Node.js Production Process Manager with a built-in Load Balancer.
+- [cross-env](https://github.com/kentcdodds/cross-env) - Cross platform setting of environment scripts.
 
 ### NoSQL And Ecology
 
 - [mongodb](https://github.com/mongodb/mongo)
 - [mongoose](https://github.com/Automattic/mongoose) - ORM
 - [connect-mongo](https://github.com/jdesboeufs/connect-mongo) - MongoDB session store for Express
-
-### Configuration
-
-- [dotenv](https://github.com/motdotla/dotenv) - Loads environment variables from .env for nodejs projects.
-
-### Logs
-
-- [morgan](https://github.com/expressjs/morgan) - HTTP request logger middleware for node.js
 
 ### Using es6 snytax by babel
 
