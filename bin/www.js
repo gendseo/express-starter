@@ -13,9 +13,11 @@ import cors from "cors";
 import logger from "morgan";
 import path from "path";
 import cookieParser from "cookie-parser";
+import multer from "multer";
 import dotenv from "dotenv";
 import helmet from "helmet";
-import csrf from "csurf";
+// import csrf from "csurf";
+import expressSwaggerGenerator from "express-swagger-generator";
 
 import router from "../routes/index";
 
@@ -27,17 +29,49 @@ const connection = mongoose.createConnection(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+const expressSwagge = expressSwaggerGenerator(app);
+let options = {
+  swaggerDefinition: {
+    info: {
+      title: "WMS API DOCS",
+      description: "wms rear-end api docs",
+      version: "0.0.1",
+    },
+    host: "192.168.21.169:9898",
+    basePath: "/",
+    // produces: ["application/json", "application/xml"],
+    // schemes: ["http", "https"],
+    // securityDefinitions: {
+    //   JWT: {
+    //     type: "apiKey",
+    //     in: "header",
+    //     name: "Authorization",
+    //     description: "",
+    //   },
+    // },
+  },
+  basedir: __dirname, //app absolute path
+  files: ["../controllers/*.js", "../routes/*.js"], //Path to the API handle folder
+};
+
+mongoose.connect(process.env.MONGODB_URI);
+mongoose.Promise = global.Promise;
+const mongodb = mongoose.connection;
+mongodb.on("error", console.error.bind(console, "MongoDB 连接错误："));
+
+const upload = multer();
 
 /**
  * set views
  */
-app.set("views", path.join(__dirname, "views"));
+// app.set("views", path.join(__dirname, "views"));
 
 /**
  * use middlewares
  */
+app.use(upload.array());
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(cors());
 app.use(helmet());
@@ -49,12 +83,27 @@ app.use(
     store: new MongoStore({ mongooseConnection: connection, ttl: process.env.SESSION_MAXAGE }),
   })
 );
-app.use(csrf({ cookie: true }));
+// const ignore_rule = ["/auth", "/api-docs"];
+// app.use((req, res, next) => {
+//   for (const i of ignore_rule) {
+//     if (req.url.includes(i)) {
+//       return next();
+//     }
+//   }
+//   if (!req.session || !req.session.username) {
+//     return res.status(401).send("Unauthorized");
+//   }
+//   req.headers["username"] = req.session.username;
+//   next();
+// });
+// app.use(csrf({ cookie: true }));
 
 /**
  * register router
  */
-app.use(router);
+router(app);
+
+expressSwagge(options);
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
 

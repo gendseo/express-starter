@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"
+      integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <input type="text" name="account" id="account" />
+    <br />
+    <input type="text" name="password" id="password" />
+    <br />
+    <button id="login">登录</button>
+    <button id="logout">注销</button>
+    <script>
+      $("#login").click(() => {
+        let account = $("#account").val();
+        let password = $("#password").val();
+        if (!account || !password) {
+          alert("表单不完整！");
+          return;
+        }
+        $.post(
+          "http://192.168.21.240:9898/auth/login",
+          {
+            account: account,
+            password: password,
+          },
+          (res) => {
+            alert(res);
+          }
+        );
+      });
+      $("#logout").click(() => {
+        $.get("http://192.168.21.240:9898/auth/logout", (res) => {
+          alert(res);
+        });
+      });
+    </script>
+  </body>
+</html>

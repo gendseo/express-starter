@@ -21,7 +21,3 @@ exports.getSession = (req, res) => {
     res.send(`no username in session`);
   }
 };
-
-exports.getCsrfToken = (req, res) => {
-  res.send(req.csrfToken());
-};

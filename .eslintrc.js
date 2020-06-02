@@ -5,10 +5,11 @@ module.exports = {
     es6: true,
   },
   extends: ["eslint:recommended", "prettier", "plugin:prettier/recommended"],
-  parser: "babel-eslint",
   parserOptions: {
+    parser: "babel-eslint",
     sourceType: "module",
     allowImportExportEverywhere: true,
+    ecmaVersion: 2017,
   },
   rules: {
     "no-console": 0, //禁止使用console
