@@ -9,22 +9,22 @@
 import Matter from "../models/matter";
 import moment from "moment";
 
-// 按条件获取matter
-exports.getMatter = async (req, res) => {
-  if (Object.keys(req.query).length === 0) {
-    return res.send(`query 参数非法！`);
+exports.queryMatter = async (req, res) => {
+  if (Object.keys(req.body).length === 0) {
+    return res.send(`matter 查询参数非法！`);
   }
   try {
-    console.log(req.query);
-
-    let queryAscription = req.query.ascription ? { ascription: req.query.ascription } : {};
-    let queryPriority = req.query.priority ? { priority: req.query.priority } : {};
-    let queryProgress = req.query.progress ? { progress: req.query.progress } : {};
-
+    // 构造查询条件
+    let queryAscription = req.body.ascription ? { ascription: { $in: req.body.ascription } } : {}; // 归属项目
+    let queryParticipants = req.body.participants ? { "participants.name": { $in: req.body.participants } } : {}; // 参与人员
+    let queryPriority = req.body.priority ? { priority: { $in: req.body.priority } } : {}; // 优先级
+    let queryProgress = req.body.progress ? { progress: { $in: req.body.progress } } : {}; // 当前进度
+    // 记录构造的查询条件
+    console.log(queryAscription, queryParticipants, queryPriority, queryProgress);
+    // 查询
     let matters = await Matter.find({
-      $and: [queryAscription, queryPriority, queryProgress],
+      $and: [queryAscription, queryParticipants, queryPriority, queryProgress],
     });
-
     return res.send(matters);
   } catch (err) {
     return res.send(err);
@@ -56,7 +56,7 @@ exports.createMatter = async (req, res) => {
     deadline: matterJSON.deadline,
     priority: matterJSON.priority,
     progress: matterJSON.progress,
-    description: matterJSON.description,
+    critical_mission: matterJSON.critical_mission,
     remark: matterJSON.remark,
     create_time: new Date(),
     update_time: new Date(),
@@ -85,14 +85,14 @@ exports.updateMatter = async (req, res) => {
         deadline: matterJSON.deadline,
         priority: matterJSON.priority,
         progress: matterJSON.progress,
-        description: matterJSON.description,
+        critical_mission: matterJSON.critical_mission,
         remark: matterJSON.remark,
         update_time: new Date(),
       }
     );
-    res.send(`id=${req.params.id} 更新成功！`);
+    res.send(`matter id=${req.params.id} 更新成功！`);
   } catch (err) {
-    res.send(`id=${req.params.id} 更新失败！`);
+    res.send(`matter id=${req.params.id} 更新失败！`);
   }
 };
 
@@ -103,9 +103,9 @@ exports.deleteMatter = async (req, res) => {
   }
   try {
     await Matter.remove({ _id: req.params.id });
-    res.send(`id=${req.params.id} 删除成功！`);
+    res.send(`matter id=${req.params.id} 删除成功！`);
   } catch (err) {
-    res.send(`id=${req.params.id} 删除失败！`);
+    res.send(`matter id=${req.params.id} 删除失败！`);
   }
 };
 
@@ -113,8 +113,17 @@ function validationMatterJSON(matter) {
   if (!matter) {
     return false;
   }
-  if (!matter.title || !matter.ascription || !matter.participants || !matter.docking_people || !matter.deadline || !matter.priority || !matter.progress || !matter.description) {
+  if (!matter.title || !matter.ascription || !matter.docking_people || !matter.deadline || !matter.priority || !matter.progress || !matter.critical_mission) {
     return false;
+  }
+  if (!matter.participants.length === 0) {
+    return false;
+  }
+  for (const p of matter.participants) {
+    if (!p.name || !p.role) {
+      console.log(p.name, p.role);
+      return false;
+    }
   }
   return true;
 }

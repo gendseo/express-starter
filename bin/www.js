@@ -37,7 +37,7 @@ let options = {
       description: "wms rear-end api docs",
       version: "0.0.1",
     },
-    host: "192.168.21.169:9898",
+    host: "192.168.21.102:9898",
     basePath: "/",
     // produces: ["application/json", "application/xml"],
     // schemes: ["http", "https"],

@@ -10,7 +10,8 @@ import matterController from "../controllers/matter";
 
 const router = express.Router();
 
-router.get("/query", matterController.getMatter);
+router.post("/query", matterController.queryMatter);
+
 router.get("", matterController.getMatters);
 
 /**
@@ -24,7 +25,7 @@ router.get("", matterController.getMatters);
  * @param {string} deadline.formData.required - 截止日期
  * @param {string} priority.formData.required - 优先级
  * @param {string} progress.formData.required - 当前进度
- * @param {string} description.formData.required - 关键任务
+ * @param {string} critical_mission.formData.required - 关键任务
  * @param {string} remark.formData - 备注
  */
 router.post("/", matterController.createMatter);
@@ -41,7 +42,7 @@ router.post("/", matterController.createMatter);
  * @param {string} deadline.formData.required - 截止日期
  * @param {string} priority.formData.required - 优先级
  * @param {string} progress.formData.required - 当前进度
- * @param {string} description.formData.required - 关键任务
+ * @param {string} critical_mission.formData.required - 关键任务
  * @param {string} remark.formData - 备注
  */
 router.put("/:id", matterController.updateMatter);

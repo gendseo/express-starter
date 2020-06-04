@@ -9,6 +9,14 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
+const participantSchema = new Schema(
+  {
+    name: String,
+    role: String,
+  },
+  { versionKey: false, _id: false }
+);
+
 const matterSchema = new Schema(
   {
     // 事项名称
@@ -25,7 +33,7 @@ const matterSchema = new Schema(
     },
     // 参与人员
     participants: {
-      type: Array,
+      type: [participantSchema],
       required: true,
     },
     // 对接人
@@ -49,7 +57,7 @@ const matterSchema = new Schema(
       required: true,
     },
     // 关键任务
-    description: {
+    critical_mission: {
       type: String,
       required: true,
     },
