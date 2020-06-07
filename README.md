@@ -5,11 +5,7 @@ express-starter is a quick boot cli.
 ## Folder Structure
 
 ```
-├─bin
-├─db
-├─model
-├─public
-└─routes
+
 ```
 
 ## Technology Stack
@@ -62,5 +58,6 @@ require("@babel/register")({
 - casbin
 - 数据库动态赠删改查
 
-### 3、日志生成中间件
-### 4、session验证中间件
+### 3、权限验证中间件
+
+### 4、日志生成中间件

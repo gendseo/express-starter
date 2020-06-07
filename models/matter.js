@@ -43,7 +43,7 @@ const matterSchema = new Schema(
     },
     // 截止日期
     deadline: {
-      type: String,
+      type: Date,
       required: true,
     },
     // 优先级

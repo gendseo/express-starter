@@ -9,47 +9,24 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const participantSchema = new Schema(
+const taskSchema = new Schema(
   {
-    name: String,
-    role: String,
-  },
-  { versionKey: false, _id: false }
-);
-
-const taskWorkSchema = new Schema(
-  {
-    name: { type: String, required: true },
+    task: { type: String, required: true },
+    action: { type: String, required: true },
     work: { type: Number, required: true },
   },
   { versionKey: false }
 );
 
-const taskSchema = new Schema(
+const staffWeeklySchema = new Schema(
   {
-    task: { type: String, required: true },
-    action: { type: String, required: true },
-    participants: { type: [taskWorkSchema], required: true },
-    create_time: { type: Date, default: Date.now },
-    update_time: { type: Date, default: Date.now },
-  },
-  { versionKey: false }
-);
-
-const Weekly = new Schema(
-  {
-    // 事项名称
-    title: {
+    // 人员
+    name: {
       type: String,
       required: true,
     },
-    // 参与人员
-    participants: {
-      type: [participantSchema],
-      required: true,
-    },
-    // 关键任务
-    critical_mission: {
+    // 本周计划
+    plan: {
       type: String,
       required: true,
     },
@@ -97,11 +74,13 @@ const Weekly = new Schema(
     // 创建日期
     create_time: {
       type: Date,
+      required: true,
       default: Date.now,
     },
     // 更新日期
     update_time: {
       type: Date,
+      required: true,
       default: Date.now,
     },
   },
@@ -110,4 +89,4 @@ const Weekly = new Schema(
   }
 );
 
-module.exports = mongoose.model("Weekly", Weekly);
+module.exports = mongoose.model("StaffWeekly", staffWeeklySchema);

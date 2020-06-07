@@ -10,6 +10,7 @@ import auth from "./auth";
 import user from "./user";
 import matter from "./matter";
 import weekly from "./weekly";
+import staffWeekly from "./staff_weekly";
 
 export default (app) => {
   app.use("/", serve);
@@ -17,4 +18,5 @@ export default (app) => {
   app.use("/user", user);
   app.use("/matters", matter);
   app.use("/weeklys", weekly);
+  app.use("/weeklys", staffWeekly);
 };

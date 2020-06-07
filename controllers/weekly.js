@@ -1,11 +1,12 @@
 /*!
- * 2020-6-1
+ * 2020-6-5
  * Copyright©aihanjiao
  */
 
 "use strict";
 
 import Weekly from "../models/weekly";
+import StaffWeekly from "../models/staff_weekly";
 
 exports.getWeeklys = async (req, res) => {
   let year = Number(req.query.year);
@@ -26,10 +27,13 @@ exports.getWeeklys = async (req, res) => {
 exports.createWeekly = async (req, res) => {
   let weeklyJSON = req.body;
   console.log(weeklyJSON);
+  if (!validationCreateWeekly(weeklyJSON)) {
+    return res.send("create 请求参数非法！");
+  }
   try {
     let w = new Weekly({
       title: weeklyJSON.title,
-      participants: [],
+      participants: weeklyJSON.participants,
       critical_mission: weeklyJSON.critical_mission,
       time: weeklyJSON.time,
       week1: weeklyJSON.week1,
@@ -47,20 +51,6 @@ exports.createWeekly = async (req, res) => {
   }
 };
 
-exports.updateWeekly = async (req, res) => {
-  if (!req.params.id) {
-    return res.send(`id参数非法！`);
-  }
-  let weeklyJSON = req.body;
-  console.log(weeklyJSON);
-  try {
-    await Weekly.update({ _id: req.params.id }, weeklyJSON);
-    return res.send(`weekly id=${req.params.id} 更新成功！`);
-  } catch (err) {
-    return res.send(`weekly id=${req.params.id} 更新失败！`);
-  }
-};
-
 exports.deleteWeekly = async (req, res) => {
   if (!req.params.id) {
     return res.send(`id参数非法！`);
@@ -72,3 +62,170 @@ exports.deleteWeekly = async (req, res) => {
     res.send(`weekly id=${req.params.id} 删除失败！`);
   }
 };
+
+exports.updateWeekly = async (req, res) => {
+  if (!req.params.id) {
+    return res.send(`id参数非法！`);
+  }
+  let weeklyJSON = req.body;
+  console.log(weeklyJSON);
+  try {
+    let w = await Weekly.findOneAndUpdate({ _id: req.params.id }, weeklyJSON, { upsert: true });
+    if (!w) {
+      return res.send(`weekly id=${req.params.id} 该记录不存在！`);
+    }
+    let want_key = ["week1", "week2", "week3", "week4", "week5", "week6", "week7"];
+    let real_key = Object.keys(weeklyJSON).filter(function (v) {
+      return want_key.indexOf(v) > -1;
+    });
+    for (const week of real_key) {
+      if (weeklyJSON[week]) {
+        if (weeklyJSON[week].target.length > 0) {
+          for (let e of weeklyJSON[week].target) {
+            for (let p of e.participants) {
+              console.log("-".repeat(50));
+              console.log({ task: e.task, action: e.action, name: p.name, work: p.work });
+              let f = await StaffWeekly.findOne(
+                {
+                  time: { year: w.time.year, month: w.time.month, week: w.time.week },
+                  name: p.name,
+                  [`${week}.target.task`]: e.task,
+                },
+                { [`${week}.target`]: 1 }
+              );
+              console.log(f === null || f === undefined, typeof f);
+              // 人员周报不存在该任务
+              if (!f) {
+                await StaffWeekly.update(
+                  {
+                    time: {
+                      year: w.time.year,
+                      month: w.time.month,
+                      week: w.time.week,
+                    },
+                    name: p.name,
+                  },
+                  {
+                    time: {
+                      year: w.time.year,
+                      month: w.time.month,
+                      week: w.time.week,
+                    },
+                    name: p.name,
+                    $push: { [`${week}.target`]: { task: e.task, action: e.action, work: p.work } },
+                  },
+                  { upsert: true }
+                );
+                continue;
+              }
+              // 存在 需要比对更新字段
+              if (f[week].target[0].action !== e.action || f[week].target[0].work !== p.work) {
+                await StaffWeekly.updateOne(
+                  {
+                    time: {
+                      year: w.time.year,
+                      month: w.time.month,
+                      week: w.time.week,
+                    },
+                    name: p.name,
+                    [`${week}.target.task`]: e.task,
+                  },
+                  { [`${week}.target.$.action`]: e.action, [`${week}.target.$.work`]: p.work }
+                );
+                continue;
+              }
+            }
+          }
+        }
+        if (weeklyJSON[week].reach.length > 0) {
+          for (let e of weeklyJSON[week].reach) {
+            for (let p of e.participants) {
+              console.log("-".repeat(50));
+              console.log({ task: e.task, action: e.action, name: p.name, work: p.work });
+              let f = await StaffWeekly.findOne(
+                {
+                  time: { year: w.time.year, month: w.time.month, week: w.time.week },
+                  name: p.name,
+                  [`${week}.reach.task`]: e.task,
+                },
+                { [`${week}.reach`]: 1 }
+              );
+              console.log(f === null || f === undefined, typeof f);
+              // 人员周报不存在该任务
+              if (!f) {
+                await StaffWeekly.update(
+                  {
+                    time: {
+                      year: w.time.year,
+                      month: w.time.month,
+                      week: w.time.week,
+                    },
+                    name: p.name,
+                  },
+                  {
+                    time: {
+                      year: w.time.year,
+                      month: w.time.month,
+                      week: w.time.week,
+                    },
+                    name: p.name,
+                    $push: { [`${week}.reach`]: { task: e.task, action: e.action, work: p.work } },
+                  },
+                  { upsert: true }
+                );
+                continue;
+              }
+              // 存在 需要比对更新字段
+              if (f[week].reach[0].action !== e.action || f[week].reach[0].work !== p.work) {
+                await StaffWeekly.updateOne(
+                  {
+                    time: {
+                      year: w.time.year,
+                      month: w.time.month,
+                      week: w.time.week,
+                    },
+                    name: p.name,
+                    [`${week}.reach.task`]: e.task,
+                  },
+                  { [`${week}.reach.$.action`]: e.action, [`${week}.reach.$.work`]: p.work }
+                );
+                continue;
+              }
+            }
+          }
+        }
+      }
+    }
+    // await Weekly.update({ _id: req.params.id }, { update_time: new Date() });
+    return res.send(`weekly id=${req.params.id} 更新成功！`);
+  } catch (err) {
+    console.log(err);
+    return res.send(`weekly id=${req.params.id} 更新失败！`);
+  }
+};
+
+function validationCreateWeekly(weekly) {
+  if (Object.keys(weekly).length === 0) {
+    console.log("weekly none");
+    return false;
+  }
+  if (!weekly.title || !weekly.critical_mission) {
+    console.log("weekly title critical_mission none");
+    return false;
+  }
+  if (!weekly.participants.length === 0) {
+    console.log("participants length === 0");
+    return false;
+  }
+  for (const p of weekly.participants) {
+    if (!p.name || !p.role) {
+      console.log(p.name, p.role);
+      return false;
+    }
+  }
+  if (!weekly.time.year || !weekly.time.month || !weekly.time.week) {
+    console.log(weekly.time);
+    return false;
+  }
+  return true;
+}

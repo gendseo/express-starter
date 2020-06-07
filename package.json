@@ -52,6 +52,7 @@
     "babel-cli": "^6.26.0",
     "babel-eslint": "^10.1.0",
     "babel-preset-env": "^1.7.0",
+    "better-docs": "^2.0.1",
     "cross-env": "^7.0.2",
     "eslint": "^7.1.0",
     "eslint-config-prettier": "^6.11.0",

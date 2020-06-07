@@ -5,9 +5,8 @@
 
 "use strict";
 
-// import m
 import Matter from "../models/matter";
-import moment from "moment";
+// import moment from "moment";
 
 exports.queryMatter = async (req, res) => {
   if (Object.keys(req.body).length === 0) {
@@ -121,7 +120,7 @@ function validationMatterJSON(matter) {
   }
   for (const p of matter.participants) {
     if (!p.name || !p.role) {
-      console.log(p.name, p.role);
+      // console.log(p.name, p.role);
       return false;
     }
   }
