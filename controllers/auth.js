@@ -18,8 +18,9 @@ exports.postLogin = async (req, res) => {
   try {
     let u = await User.findOne({ account: account, password: password });
     if (u) {
-      req.session.username = u.account;
-      return res.send("登录成功");
+      req.session.account = u.account;
+      req.session.name = u.name;
+      return res.send(`${u.name} 登录成功`);
     } else {
       return res.send("用户名或密码错误");
     }
@@ -29,29 +30,46 @@ exports.postLogin = async (req, res) => {
 };
 
 exports.register = async (req, res) => {
-  let account = req.body.account;
-  let password = req.body.password;
+  let userJSON = req.body;
 
-  if (!account || !password) {
+  if (!validationCreateUser(userJSON)) {
     return res.send("字段非法");
   }
 
   try {
-    let u = await User.findOne({ account: account });
+    let u = await User.findOne({ account: userJSON.account });
     if (u) {
       return res.send("用户已存在");
     }
-    let nu = new User({ account: account, password: password });
+    let nu = new User({
+      account: userJSON.account,
+      password: userJSON.password,
+      name: userJSON.name,
+      phone: userJSON.phone,
+      department: userJSON.department,
+    });
     await nu.save();
-    req.session.username = nu.account;
-    return res.send(`恭喜 ${nu.account} 注册成功！`);
+    req.session.account = nu.account;
+    req.session.name = nu.name;
+    return res.send(`恭喜 ${nu.name} 注册成功！`);
   } catch (err) {
     return res.send("注册时发生错误！");
   }
 };
 
 exports.logout = async (req, res) => {
-  let username = req.session.username;
-  delete req.session.username;
-  res.send(`${username} logout`);
+  let name = req.session.name;
+  delete req.session.account;
+  delete req.session.name;
+  res.send(`${name} logout`);
 };
+
+function validationCreateUser(userJSON) {
+  if (Object.keys(userJSON).length === 0) {
+    return false;
+  }
+  if (!userJSON.account || !userJSON.password || !userJSON.name || !userJSON.phone || !userJSON.department) {
+    return false;
+  }
+  return true;
+}

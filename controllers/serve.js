@@ -21,3 +21,25 @@ exports.getSession = (req, res) => {
     res.send(`no username in session`);
   }
 };
+
+import { Decrypt, Encrypt } from "../util/AESkey";
+
+exports.decrypt = (req, res) => {
+  let encode = req.query.encode;
+  let e = Decrypt(encode);
+  console.log(e, JSON.stringify(e));
+  res.send(e);
+};
+
+exports.encrypt = (req, res) => {
+  let e = Encrypt("aihanjiao");
+  res.send(e);
+};
+
+import Auth from "../models/auth";
+
+exports.setAuth = async (req, res) => {
+  let a = new Auth({ role: "staff", rules: [{ path: "/", method: "GET" }] });
+  await a.save();
+  res.send(a);
+};

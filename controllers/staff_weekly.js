@@ -7,7 +7,7 @@
 
 import StaffWeekly from "../models/staff_weekly";
 
-exports.getStaffsWeeklys = async (req, res) => {
+exports.getStaffsWeekly = async (req, res) => {
   let year = Number(req.query.year);
   let month = Number(req.query.month);
   let week = Number(req.query.week);
@@ -23,7 +23,7 @@ exports.getStaffsWeeklys = async (req, res) => {
   }
 };
 
-exports.getStaffWeeklys = async (req, res) => {
+exports.getStaffWeekly = async (req, res) => {
   let year = Number(req.query.year);
   let month = Number(req.query.month);
   let week = Number(req.query.week);

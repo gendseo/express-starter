@@ -13,16 +13,16 @@ const router = express.Router();
 /**
  * 获取所有人员周报-需要登陆
  * @route GET /weeklys/staffs
- * @group /weeklys/staff - staff weekly list group actions
+ * @group weeklys/staff - staff weekly list group actions
  */
-router.get("/staffs", staffWeeklyController.getStaffsWeeklys);
+router.get("/staffs", staffWeeklyController.getStaffsWeekly);
 
 /**
  * 获取人员周报-需要登陆，返回登录人员的周报
  * @route GET /weeklys/staff
  * @group weeklys/staff - staff weekly list group actions
  */
-router.get("/staff", staffWeeklyController.getStaffWeeklys);
+router.get("/staff", staffWeeklyController.getStaffWeekly);
 
 /**
  * 创建一个人员周报-需要登陆，该API一般用不到

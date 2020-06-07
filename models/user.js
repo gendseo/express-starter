@@ -11,15 +11,39 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema(
   {
+    // 账号
     account: {
       type: String,
       unique: true,
       required: true,
-      trim: true,
     },
+    // 密码
     password: {
       type: String,
       required: true,
+    },
+    // 真实名称
+    name: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    // 电话
+    phone: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    // 部门
+    department: {
+      type: String,
+      required: true,
+    },
+    // 角色
+    role: {
+      type: String,
+      required: true,
+      default: "staff",
     },
   },
   {
