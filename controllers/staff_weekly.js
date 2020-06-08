@@ -7,7 +7,7 @@
 
 import StaffWeekly from "../models/staff_weekly";
 
-exports.getStaffsWeekly = async (req, res) => {
+exports.queryStaffsWeekly = async (req, res) => {
   let year = Number(req.query.year);
   let month = Number(req.query.month);
   let week = Number(req.query.week);
@@ -23,7 +23,7 @@ exports.getStaffsWeekly = async (req, res) => {
   }
 };
 
-exports.getStaffWeekly = async (req, res) => {
+exports.queryStaffWeekly = async (req, res) => {
   let year = Number(req.query.year);
   let month = Number(req.query.month);
   let week = Number(req.query.week);
@@ -32,22 +32,22 @@ exports.getStaffWeekly = async (req, res) => {
   }
   console.log(year, month, week);
   try {
-    let weeklys = await StaffWeekly.find({ time: { year: year, month: month, week: week } });
+    let weeklys = await StaffWeekly.find({ time: { year: year, month: month, week: week }, name: req.session.name });
     return res.send(weeklys);
   } catch (err) {
     return res.send(err);
   }
 };
 
-exports.postStaffWeeklys = async (req, res) => {
+exports.createStaffWeekly = async (req, res) => {
   return res.send("");
 };
 
-exports.putStaffWeeklys = async (req, res) => {
+exports.updateStaffWeekly = async (req, res) => {
   return res.send("");
 };
 
-exports.deleteStaffWeeklys = async (req, res) => {
+exports.deleteStaffWeekly = async (req, res) => {
   return res.send("");
 };
 

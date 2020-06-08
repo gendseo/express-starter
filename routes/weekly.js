@@ -29,7 +29,7 @@ router.post("", weeklyController.createWeekly);
 
 /**
  * 根据id更新该项目周报
- * @route PUT /weeklys
+ * @route PUT /weeklys/{id}
  * @group weeklys - weekly list group actions
  * @param {string} id.path.required - id
  */

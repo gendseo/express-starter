@@ -15,7 +15,7 @@ import weekly from "./weekly";
 import staffWeekly from "./staff_weekly";
 
 export default (app) => {
-  app.use(authMiddleware);
+  // app.use(authMiddleware);
 
   app.use("/", serve);
   app.use("/auth", auth);

@@ -1,16 +1,21 @@
+import dotenv from "dotenv";
+import dotenvParseVariables from "dotenv-parse-variables";
+
 import User from "../models/user";
 import Auth from "../models/auth";
 
-const ignore_rule = ["/auth", "/api-docs"];
+let env = dotenv.config({});
+if (env.error) throw env.error;
+let config = dotenvParseVariables(env.parsed);
 
 const auth = async (req, res, next) => {
   console.log(req.path, req.url, req.method);
-  for (const i of ignore_rule) {
+  for (const i of config.AUTH_IGNORE_PATH) {
     if (req.url.includes(i)) {
       return next();
     }
   }
-  if (req.method === "OPTIONS") {
+  if (req.method === config.AUTH_IGNORE_METHOD) {
     return next();
   }
   if (!req.session || !req.session.account) {

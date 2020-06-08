@@ -16,7 +16,7 @@ module.exports = {
     eqeqeq: 0, //必须使用全等
     "no-debugger": 1, //禁止使用debugger
     "no-unused-vars": [1, { vars: "all", args: "after-used" }], //不能有声明后未被使用的变量或参数
-
+    "linebreak-style": "off", // 禁止检查换行风格  方便在不同的系统上开发
     // "no-alert": 0, //禁止使用alert confirm prompt
     // "no-array-constructor": 2, //禁止使用数组构造器
     // "no-bitwise": 0, //禁止使用按位运算符

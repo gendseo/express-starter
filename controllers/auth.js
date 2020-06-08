@@ -7,6 +7,8 @@
 
 import User from "../models/user";
 
+import { Decrypt } from "../util/AESkey";
+
 exports.postLogin = async (req, res) => {
   let account = req.body.account;
   let password = req.body.password;
@@ -16,7 +18,7 @@ exports.postLogin = async (req, res) => {
   }
 
   try {
-    let u = await User.findOne({ account: account, password: password });
+    let u = await User.findOne({ account: Decrypt(account), password: Decrypt(password) });
     if (u) {
       req.session.account = u.account;
       req.session.name = u.name;
@@ -42,8 +44,8 @@ exports.register = async (req, res) => {
       return res.send("用户已存在");
     }
     let nu = new User({
-      account: userJSON.account,
-      password: userJSON.password,
+      account: Decrypt(userJSON.account),
+      password: Decrypt(userJSON.password),
       name: userJSON.name,
       phone: userJSON.phone,
       department: userJSON.department,

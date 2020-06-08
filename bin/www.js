@@ -15,17 +15,21 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import multer from "multer";
 import dotenv from "dotenv";
+import dotenvParseVariables from "dotenv-parse-variables";
 import helmet from "helmet";
 // import csrf from "csurf";
 import expressSwaggerGenerator from "express-swagger-generator";
 
 import router from "../routes/index";
 
-dotenv.config(); // inject dotenv configuration before creating express instance
+let env = dotenv.config({}); // inject dotenv configuration before creating express instance
+if (env.error) throw env.error;
+let config = dotenvParseVariables(env.parsed);
+
 const app = express(); // create express instance
-const port = process.env.PORT; // use dotenv configuration
+const port = config.PORT; // use dotenv configuration
 const MongoStore = connectMongo(session);
-const connection = mongoose.createConnection(process.env.MONGODB_URI, {
+const connection = mongoose.createConnection(config.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -33,12 +37,12 @@ const expressSwagge = expressSwaggerGenerator(app);
 let options = {
   swaggerDefinition: {
     info: {
-      title: "WMS API DOCS",
-      description: "wms rear-end api docs",
-      version: "0.0.1",
+      title: config.SWAGGER_INFO_TITLE,
+      description: config.SWAGGER_INFO_DESCRIPTION,
+      version: config.SWAGGER_INFO_VERSION,
     },
-    host: "221.213.113.170:9999",
-    basePath: "/",
+    host: config.SWAGGER_HOST,
+    basePath: config.SWAGGER_BASEPATH,
     // produces: ["application/json", "application/xml"],
     // schemes: ["http", "https"],
     // securityDefinitions: {
@@ -51,10 +55,10 @@ let options = {
     // },
   },
   basedir: __dirname, //app absolute path
-  files: ["../controllers/*.js", "../routes/*.js"], //Path to the API handle folder
+  files: config.SWAGGER_FILES, //Path to the API handle folder
 };
 
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(config.MONGODB_URI);
 mongoose.Promise = global.Promise;
 const mongodb = mongoose.connection;
 mongodb.on("error", console.error.bind(console, "MongoDB 连接错误："));
@@ -72,31 +76,17 @@ const upload = multer();
 app.use(upload.array());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser(process.env.SESSION_SECRET));
+app.use(cookieParser(config.SESSION_SECRET));
 app.use(cors());
 app.use(helmet());
-app.use(logger(`:remote-addr - [:date[iso]]  ":method  :url  HTTP/:http-version  :response-time ms"  :status`));
+app.use(logger(config.LOGGER_FORMAT));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
-    store: new MongoStore({ mongooseConnection: connection, ttl: process.env.SESSION_MAXAGE }),
+    secret: config.SESSION_SECRET,
+    store: new MongoStore({ mongooseConnection: connection, ttl: config.SESSION_MAXAGE }),
   })
 );
-// const ignore_rule = ["/auth", "/api-docs"];
-// app.use((req, res, next) => {
-//   for (const i of ignore_rule) {
-//     if (req.url.includes(i)) {
-//       return next();
-//     }
-//   }
-//   if (!req.session || !req.session.username) {
-//     return res.status(401).send("Unauthorized");
-//   }
-//   req.headers["username"] = req.session.username;
-//   next();
-// });
-// app.use(csrf({ cookie: true }));
 
 /**
  * register router
