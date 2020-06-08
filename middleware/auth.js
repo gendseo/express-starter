@@ -1,21 +1,15 @@
-import dotenv from "dotenv";
-import dotenvParseVariables from "dotenv-parse-variables";
-
+import config from "config";
 import User from "../models/user";
 import Auth from "../models/auth";
 
-let env = dotenv.config({});
-if (env.error) throw env.error;
-let config = dotenvParseVariables(env.parsed);
-
 const auth = async (req, res, next) => {
   console.log(req.path, req.url, req.method);
-  for (const i of config.AUTH_IGNORE_PATH) {
+  for (const i of config.get("auth.ignore.path")) {
     if (req.url.includes(i)) {
       return next();
     }
   }
-  if (req.method === config.AUTH_IGNORE_METHOD) {
+  if (req.method === config.get("auth.ignore.method")) {
     return next();
   }
   if (!req.session || !req.session.account) {

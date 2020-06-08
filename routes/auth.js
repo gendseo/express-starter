@@ -17,7 +17,7 @@ const router = express.Router();
  * @param {string} account.formData.required - username
  * @param {string} password.formData.required - user's password.
  */
-router.post("/login", authController.postLogin);
+router.post("/login", authController.login);
 
 /**
  * Register successfully set session username

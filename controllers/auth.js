@@ -9,7 +9,7 @@ import User from "../models/user";
 
 import { Decrypt } from "../util/AESkey";
 
-exports.postLogin = async (req, res) => {
+exports.login = async (req, res) => {
   let account = req.body.account;
   let password = req.body.password;
 

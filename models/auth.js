@@ -16,7 +16,7 @@ const ruleSchema = new Schema(
       required: true,
     },
     method: {
-      type: String,
+      type: [String],
       required: true,
     },
   },

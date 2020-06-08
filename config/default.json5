@@ -1,0 +1,63 @@
+{
+  server: {
+    port: 9905,
+  },
+  logger: {
+    format: ':remote-addr - [:date[iso]]  ":method  :url  HTTP/:http-version  :response-time ms"  :status',
+  },
+  swagger: {
+    info: {
+      title: "WMS API DOCS",
+      description: "wms rear-end api docs",
+      version: "0.0.1",
+    },
+    host: "192.168.21.164:9905",
+    basePath: "/",
+    files: ["../controllers/*.js", "../routes/*.js"],
+  },
+  session: {
+    secret: "TOL6FKR8Ux&yBdAa7^#0N3%OjEA9B85%",
+    maxAge: 120,
+  },
+  mongodb: {
+    uri: "mongodb://localhost/wms",
+    user: "",
+    password: "",
+    host: "localhost",
+    port: 27017,
+  },
+  auth: {
+    ignore: {
+      path: ["/auth", "/api-docs"],
+      method: "OPTIONS",
+    },
+    hooks: {
+      staff: {
+        role: "staff",
+        rules: [
+          {
+            path: "/",
+            method: "*",
+          },
+          {
+            path: "/matters",
+            method: ["GET"],
+          },
+        ],
+      },
+      manager: {
+        role: "manager",
+        rules: [
+          {
+            path: "/",
+            method: "*",
+          },
+          {
+            path: "/matters",
+            method: ["*"],
+          },
+        ],
+      },
+    },
+  },
+}

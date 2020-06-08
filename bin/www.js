@@ -11,25 +11,21 @@ import connectMongo from "connect-mongo";
 import mongoose from "mongoose";
 import cors from "cors";
 import logger from "morgan";
-import path from "path";
 import cookieParser from "cookie-parser";
 import multer from "multer";
-import dotenv from "dotenv";
-import dotenvParseVariables from "dotenv-parse-variables";
 import helmet from "helmet";
-// import csrf from "csurf";
+import config from "config";
 import expressSwaggerGenerator from "express-swagger-generator";
 
 import router from "../routes/index";
+import authHooks from "../middleware/auth_hooks";
 
-let env = dotenv.config({}); // inject dotenv configuration before creating express instance
-if (env.error) throw env.error;
-let config = dotenvParseVariables(env.parsed);
+process.env["NODE_CONFIG_DIR"] = __dirname + "/config/";
 
 const app = express(); // create express instance
-const port = config.PORT; // use dotenv configuration
+const port = config.get("server.port"); // use dotenv configuration
 const MongoStore = connectMongo(session);
-const connection = mongoose.createConnection(config.MONGODB_URI, {
+const connection = mongoose.createConnection(config.get("mongodb.uri"), {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -37,12 +33,12 @@ const expressSwagge = expressSwaggerGenerator(app);
 let options = {
   swaggerDefinition: {
     info: {
-      title: config.SWAGGER_INFO_TITLE,
-      description: config.SWAGGER_INFO_DESCRIPTION,
-      version: config.SWAGGER_INFO_VERSION,
+      title: config.get("swagger.info.title"),
+      description: config.get("swagger.info.description"),
+      version: config.get("swagger.info.version"),
     },
-    host: config.SWAGGER_HOST,
-    basePath: config.SWAGGER_BASEPATH,
+    host: config.get("swagger.host"),
+    basePath: config.get("swagger.basePath"),
     // produces: ["application/json", "application/xml"],
     // schemes: ["http", "https"],
     // securityDefinitions: {
@@ -55,10 +51,10 @@ let options = {
     // },
   },
   basedir: __dirname, //app absolute path
-  files: config.SWAGGER_FILES, //Path to the API handle folder
+  files: config.get("swagger.files"), //Path to the API handle folder
 };
 
-mongoose.connect(config.MONGODB_URI);
+mongoose.connect(config.get("mongodb.uri"));
 mongoose.Promise = global.Promise;
 const mongodb = mongoose.connection;
 mongodb.on("error", console.error.bind(console, "MongoDB 连接错误："));
@@ -66,34 +62,28 @@ mongodb.on("error", console.error.bind(console, "MongoDB 连接错误："));
 const upload = multer();
 
 /**
- * set views
- */
-// app.set("views", path.join(__dirname, "views"));
-
-/**
  * use middlewares
  */
 app.use(upload.array());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser(config.SESSION_SECRET));
+app.use(cookieParser(config.get("session.secret")));
 app.use(cors());
 app.use(helmet());
-app.use(logger(config.LOGGER_FORMAT));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(logger(config.get("logger.format")));
 app.use(
   session({
-    secret: config.SESSION_SECRET,
-    store: new MongoStore({ mongooseConnection: connection, ttl: config.SESSION_MAXAGE }),
+    secret: config.get("session.secret"),
+    store: new MongoStore({ mongooseConnection: connection, ttl: config.get("session.maxAge") }),
   })
 );
+app.use(authHooks); // auto register auth hooks from config
 
 /**
  * register router
  */
-router(app);
-
 expressSwagge(options);
+router(app);
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
 
