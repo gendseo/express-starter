@@ -12,7 +12,8 @@ const Schema = mongoose.Schema;
 const taskSchema = new Schema(
   {
     task: { type: String, required: true },
-    action: { type: String, required: true },
+    product: { type: String, required: true },
+    type: { type: String, required: true },
     work: { type: Number, required: true },
   },
   { versionKey: false }

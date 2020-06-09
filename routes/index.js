@@ -22,5 +22,5 @@ export default (app) => {
   app.use("/auth", auth);
   app.use("/matters", matter);
   app.use("/weeklys", weekly);
-  app.use("/weeklys", staffWeekly);
+  app.use("/staff_weeklys", staffWeekly);
 };

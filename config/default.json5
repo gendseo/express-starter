@@ -30,11 +30,13 @@
     host: "localhost",
     port: 27017,
   },
+
   auth: {
     ignore: {
       path: ["/auth", "/api-docs", "/set", "/get"],
       method: "OPTIONS",
     },
+    users: {},
     hooks: {
       staff: {
         role: "staff",
@@ -64,11 +66,11 @@
             method: ["GET"],
           },
           {
-            path: "/weeklys/staff",
+            path: "/staff_weeklys/list",
             method: ["GET"],
           },
           {
-            path: "/weeklys/staff/list",
+            path: "/staff_weeklys",
             method: ["GET"],
           },
         ],
@@ -101,11 +103,11 @@
             method: ["GET", "POST", "PUT", "DELETE"],
           },
           {
-            path: "/weeklys/staff",
+            path: "/staff_weeklys",
             method: ["GET", "POST", "PUT", "DELETE"],
           },
           {
-            path: "/weeklys/staff/list",
+            path: "/staff_weeklys/list",
             method: ["GET"],
           },
         ],
@@ -138,11 +140,11 @@
             method: ["GET", "POST", "PUT", "DELETE"],
           },
           {
-            path: "/weeklys/staff",
+            path: "/staff_weeklys",
             method: ["GET", "POST", "PUT", "DELETE"],
           },
           {
-            path: "/weeklys/staff/list",
+            path: "/staff_weeklys/list",
             method: ["GET"],
           },
         ],

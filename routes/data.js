@@ -25,11 +25,10 @@ router.get("/users", dataController.queryAllUsers);
 router.get("/ascriptions", dataController.queryAllAscriptions);
 
 /**
- * 根据role获取权限列表
- * @route GET /data/rules/{role}
+ * 获取已登录用户的rules
+ * @route GET /data/rules
  * @group data - data group
- * @param {string} role.path.required - 角色: staff | manager
  */
-router.get("/rules/:role", dataController.queryRoleRules);
+router.get("/rules", dataController.queryRules);
 
 module.exports = router;

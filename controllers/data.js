@@ -8,6 +8,7 @@
 import userModel from "../models/user";
 import matterModel from "../models/matter";
 import authModel from "../models/auth";
+import { Encrypt } from "../util/AESkey";
 
 exports.queryAllUsers = async (req, res) => {
   try {
@@ -36,21 +37,13 @@ exports.queryAllAscriptions = async (req, res) => {
   }
 };
 
-exports.queryRoleRules = async (req, res) => {
+exports.queryRules = async (req, res) => {
   try {
-    let role = req.params.role;
-    console.log(req.params);
-    if (!role) {
-      return res.send("role 字段非法");
+    let u = await userModel.findOne({ account: Encrypt(req.session.account) }, { password: 0 });
+    if (!u) {
+      return res.send("未登录！");
     }
-    let rules = await authModel.findOne(
-      {
-        role: role,
-      },
-      {
-        _id: 0,
-      }
-    );
+    let rules = await authModel.findOne({ role: u.role }, { _id: 0 });
     return res.json(rules);
   } catch (err) {
     console.log(err);

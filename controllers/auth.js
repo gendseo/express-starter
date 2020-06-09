@@ -7,7 +7,7 @@
 
 import User from "../models/user";
 
-import { Decrypt } from "../util/AESkey";
+import { Decrypt, Encrypt } from "../util/AESkey";
 
 exports.login = async (req, res) => {
   let account = req.body.account;
@@ -19,6 +19,29 @@ exports.login = async (req, res) => {
 
   try {
     let u = await User.findOne({ account: account, password: password }, { password: 0 });
+    if (u) {
+      console.log(Decrypt(u.account), u.name);
+      req.session.account = Decrypt(u.account);
+      req.session.name = u.name;
+      return res.json(u);
+    } else {
+      return res.send("用户名或密码错误");
+    }
+  } catch (err) {
+    return res.send("登录时发生错误！");
+  }
+};
+
+exports.loginWithoutCrypt = async (req, res) => {
+  let account = req.body.account;
+  let password = req.body.password;
+
+  if (!account || !password) {
+    return res.send("字段非法");
+  }
+
+  try {
+    let u = await User.findOne({ account: Encrypt(account), password: Encrypt(password) }, { password: 0 });
     if (u) {
       console.log(Decrypt(u.account), u.name);
       req.session.account = Decrypt(u.account);
@@ -47,6 +70,36 @@ exports.register = async (req, res) => {
     let nu = new User({
       account: userJSON.account,
       password: userJSON.password,
+      name: userJSON.name,
+      phone: userJSON.phone,
+      department: userJSON.department,
+    });
+    await nu.save();
+    nu.password = undefined;
+    console.log(Decrypt(nu.account), nu.name);
+    req.session.account = Decrypt(nu.account);
+    req.session.name = nu.name;
+    return res.send(nu);
+  } catch (err) {
+    return res.send("注册时发生错误！");
+  }
+};
+
+exports.registerWithoutCrypt = async (req, res) => {
+  let userJSON = req.body;
+
+  if (!validationCreateUser(userJSON)) {
+    return res.send("字段非法");
+  }
+
+  try {
+    let u = await User.findOne({ account: Encrypt(userJSON.account) });
+    if (u) {
+      return res.send("用户已存在");
+    }
+    let nu = new User({
+      account: Encrypt(userJSON.account),
+      password: Encrypt(userJSON.password),
       name: userJSON.name,
       phone: userJSON.phone,
       department: userJSON.department,

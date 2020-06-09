@@ -28,7 +28,7 @@ exports.createWeekly = async (req, res) => {
   let weeklyJSON = req.body;
   console.log(weeklyJSON);
   if (!validationCreateWeekly(weeklyJSON)) {
-    return res.send("create 请求参数非法！");
+    return res.send("项目周报创建请求参数非法");
   }
   try {
     let w = new Weekly({
@@ -45,7 +45,7 @@ exports.createWeekly = async (req, res) => {
       week7: weeklyJSON.week7,
     });
     await w.save();
-    return res.send(`weekly ${weeklyJSON.title} create!`);
+    return res.json(w);
   } catch (err) {
     return res.send(err);
   }
@@ -57,17 +57,20 @@ exports.deleteWeekly = async (req, res) => {
   }
   try {
     await Weekly.remove({ _id: req.params.id });
-    res.send(`weekly id=${req.params.id} 删除成功！`);
+    return res.send(`weekly id=${req.params.id} 删除成功！`);
   } catch (err) {
-    res.send(`weekly id=${req.params.id} 删除失败！`);
+    return res.send(`weekly id=${req.params.id} 删除失败！`);
   }
 };
 
 exports.updateWeekly = async (req, res) => {
   if (!req.params.id) {
-    return res.send(`id参数非法！`);
+    return res.send(`项目周报ID参数非法`);
   }
   let weeklyJSON = req.body;
+  if (Object.keys(weeklyJSON).length === 0) {
+    return res.send(`项目周报参数为空`);
+  }
   try {
     let w = await Weekly.findOne({ _id: req.params.id });
     if (!w) {
@@ -105,7 +108,6 @@ exports.updateWeekly = async (req, res) => {
                 });
                 await nsw.save();
               }
-              // console.log({ task: e.task, action: e.action, name: p.name, work: p.work });
               let f = await StaffWeekly.findOne(
                 {
                   time: { year: w.time.year, month: w.time.month, week: w.time.week },
@@ -133,7 +135,7 @@ exports.updateWeekly = async (req, res) => {
                       week: w.time.week,
                     },
                     name: p.name,
-                    $push: { [`${week}.target`]: { task: e.task, action: e.action, work: p.work } },
+                    $push: { [`${week}.target`]: { task: e.task, product: e.product, type: "weekly", work: p.work } },
                     update_time: new Date(),
                   },
                   { upsert: true }
@@ -141,7 +143,7 @@ exports.updateWeekly = async (req, res) => {
                 continue;
               }
               // 存在 需要比对更新字段
-              if (f[week].target[0].action !== e.action || f[week].target[0].work !== p.work) {
+              if (f[week].target[0].product !== e.product || f[week].target[0].work !== p.work) {
                 await StaffWeekly.updateOne(
                   {
                     time: {
@@ -152,7 +154,7 @@ exports.updateWeekly = async (req, res) => {
                     name: p.name,
                     [`${week}.target.task`]: e.task,
                   },
-                  { [`${week}.target.$.action`]: e.action, [`${week}.target.$.work`]: p.work, update_time: new Date() }
+                  { [`${week}.target.$.product`]: e.product, type: "weekly", [`${week}.target.$.work`]: p.work, update_time: new Date() }
                 );
                 continue;
               }
@@ -182,7 +184,7 @@ exports.updateWeekly = async (req, res) => {
                 });
                 await nsw.save();
               }
-              // console.log({ task: e.task, action: e.action, name: p.name, work: p.work });
+              // console.log({ task: e.task, product: e.product, name: p.name, work: p.work });
               let f = await StaffWeekly.findOne(
                 {
                   time: { year: w.time.year, month: w.time.month, week: w.time.week },
@@ -210,7 +212,7 @@ exports.updateWeekly = async (req, res) => {
                       week: w.time.week,
                     },
                     name: p.name,
-                    $push: { [`${week}.reach`]: { task: e.task, action: e.action, work: p.work } },
+                    $push: { [`${week}.reach`]: { task: e.task, product: e.product, type: "weekly", work: p.work } },
                     update_time: new Date(),
                   },
                   { upsert: true }
@@ -218,7 +220,7 @@ exports.updateWeekly = async (req, res) => {
                 continue;
               }
               // 存在 需要比对更新字段
-              if (f[week].reach[0].action !== e.action || f[week].reach[0].work !== p.work) {
+              if (f[week].reach[0].product !== e.product || f[week].reach[0].work !== p.work) {
                 await StaffWeekly.updateOne(
                   {
                     time: {
@@ -229,7 +231,7 @@ exports.updateWeekly = async (req, res) => {
                     name: p.name,
                     [`${week}.reach.task`]: e.task,
                   },
-                  { [`${week}.reach.$.action`]: e.action, [`${week}.reach.$.work`]: p.work, update_time: new Date() }
+                  { [`${week}.reach.$.product`]: e.product, type: "weekly", [`${week}.reach.$.work`]: p.work, update_time: new Date() }
                 );
                 continue;
               }
@@ -247,25 +249,20 @@ exports.updateWeekly = async (req, res) => {
 
 function validationCreateWeekly(weekly) {
   if (Object.keys(weekly).length === 0) {
-    console.log("weekly none");
     return false;
   }
   if (!weekly.title || !weekly.critical_mission) {
-    console.log("weekly title critical_mission none");
     return false;
   }
   if (!weekly.participants.length === 0) {
-    console.log("participants length === 0");
     return false;
   }
   for (const p of weekly.participants) {
     if (!p.name || !p.role) {
-      console.log(p.name, p.role);
       return false;
     }
   }
-  if (!weekly.time.year || !weekly.time.month || !weekly.time.week) {
-    console.log(weekly.time);
+  if (!weekly.time || !weekly.time.year || !weekly.time.month || !weekly.time.week) {
     return false;
   }
   return true;
