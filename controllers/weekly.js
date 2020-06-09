@@ -73,6 +73,7 @@ exports.updateWeekly = async (req, res) => {
     if (!w) {
       return res.send(`weekly id=${req.params.id} 该记录不存在！`);
     }
+    console.log(weeklyJSON);
     let merge = diffAndMergeObject(weeklyJSON, w);
     await Weekly.updateOne({ _id: req.params.id }, merge);
     let want_key = ["week1", "week2", "week3", "week4", "week5", "week6", "week7"];
@@ -84,7 +85,7 @@ exports.updateWeekly = async (req, res) => {
         if (weeklyJSON[week].target && weeklyJSON[week].target.length > 0) {
           for (let e of weeklyJSON[week].target) {
             for (let p of e.participants) {
-              console.log("-".repeat(50));
+              // console.log("-".repeat(50));
               let sw = await StaffWeekly.findOne({
                 time: { year: w.time.year, month: w.time.month, week: w.time.week },
                 name: p.name,
@@ -161,7 +162,7 @@ exports.updateWeekly = async (req, res) => {
         if (weeklyJSON[week].reach && weeklyJSON[week].reach.length > 0) {
           for (let e of weeklyJSON[week].reach) {
             for (let p of e.participants) {
-              console.log("-".repeat(50));
+              // console.log("-".repeat(50));
               let sw = await StaffWeekly.findOne({
                 time: { year: w.time.year, month: w.time.month, week: w.time.week },
                 name: p.name,

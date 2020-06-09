@@ -18,7 +18,7 @@ import config from "config";
 import expressSwaggerGenerator from "express-swagger-generator";
 
 import router from "../routes/index";
-import authHooks from "../middleware/auth_hooks";
+import { authHooks } from "../util/auth_hooks";
 
 process.env["NODE_CONFIG_DIR"] = __dirname + "/config/";
 
@@ -68,22 +68,35 @@ app.use(upload.array());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(config.get("session.secret")));
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:8080",
+    optionsSuccessStatus: 200,
+  })
+);
 app.use(helmet());
 app.use(logger(config.get("logger.format")));
 app.use(
   session({
+    name: config.get("session.name"),
+    resave: config.get("session.resave"),
+    saveUninitialized: config.get("session.saveUninitialized"),
     secret: config.get("session.secret"),
     store: new MongoStore({ mongooseConnection: connection, ttl: config.get("session.maxAge") }),
   })
 );
-app.use(authHooks); // auto register auth hooks from config
 
 /**
  * register router
  */
 expressSwagge(options);
 router(app);
+
+/**
+ * app run hooks
+ */
+authHooks();
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
 

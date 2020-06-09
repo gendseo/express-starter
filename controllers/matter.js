@@ -14,10 +14,10 @@ exports.queryMatter = async (req, res) => {
   }
   try {
     // 构造查询条件
-    let queryAscription = req.body.ascription ? { ascription: { $in: req.body.ascription } } : {}; // 归属项目
-    let queryParticipants = req.body.participants ? { "participants.name": { $in: req.body.participants } } : {}; // 参与人员
-    let queryPriority = req.body.priority ? { priority: { $in: req.body.priority } } : {}; // 优先级
-    let queryProgress = req.body.progress ? { progress: { $in: req.body.progress } } : {}; // 当前进度
+    let queryAscription = req.body.ascription.length !== 0 ? { ascription: { $in: req.body.ascription } } : {}; // 归属项目
+    let queryParticipants = req.body.participants.length !== 0 ? { "participants.name": { $in: req.body.participants } } : {}; // 参与人员
+    let queryPriority = req.body.priority.length !== 0 ? { priority: { $in: req.body.priority } } : {}; // 优先级
+    let queryProgress = req.body.progress.length !== 0 ? { progress: { $in: req.body.progress } } : {}; // 当前进度
     // 记录构造的查询条件
     console.log(queryAscription, queryParticipants, queryPriority, queryProgress);
     // 查询

@@ -11,13 +11,17 @@
       description: "wms rear-end api docs",
       version: "0.0.1",
     },
-    host: "192.168.21.164:9905",
+    host: "192.168.21.174:9905",
     basePath: "/",
     files: ["../controllers/*.js", "../routes/*.js"],
   },
+  cors: {},
   session: {
+    name: "wms",
+    resave: true,
+    saveUninitialized: false,
     secret: "TOL6FKR8Ux&yBdAa7^#0N3%OjEA9B85%",
-    maxAge: 120,
+    maxAge: 600,
   },
   mongodb: {
     uri: "mongodb://localhost/wms",
@@ -28,7 +32,7 @@
   },
   auth: {
     ignore: {
-      path: ["/auth", "/api-docs"],
+      path: ["/auth", "/api-docs", "/set", "/get"],
       method: "OPTIONS",
     },
     hooks: {
@@ -36,11 +40,35 @@
         role: "staff",
         rules: [
           {
-            path: "/",
-            method: "*",
+            path: "/data/users",
+            method: ["GET"],
+          },
+          {
+            path: "/data/ascriptions",
+            method: ["GET"],
+          },
+          {
+            path: "/data/rules",
+            method: ["GET"],
+          },
+          {
+            path: "/matters/query",
+            method: ["POST"],
           },
           {
             path: "/matters",
+            method: ["GET"],
+          },
+          {
+            path: "/weeklys",
+            method: ["GET"],
+          },
+          {
+            path: "/weeklys/staff",
+            method: ["GET"],
+          },
+          {
+            path: "/weeklys/staff/list",
             method: ["GET"],
           },
         ],
@@ -49,12 +77,73 @@
         role: "manager",
         rules: [
           {
-            path: "/",
-            method: "*",
+            path: "/data/users",
+            method: ["GET"],
+          },
+          {
+            path: "/data/ascriptions",
+            method: ["GET"],
+          },
+          {
+            path: "/data/rules",
+            method: ["GET"],
+          },
+          {
+            path: "/matters/query",
+            method: ["POST"],
           },
           {
             path: "/matters",
-            method: ["*"],
+            method: ["GET", "POST", "PUT", "DELETE"],
+          },
+          {
+            path: "/weeklys",
+            method: ["GET", "POST", "PUT", "DELETE"],
+          },
+          {
+            path: "/weeklys/staff",
+            method: ["GET", "POST", "PUT", "DELETE"],
+          },
+          {
+            path: "/weeklys/staff/list",
+            method: ["GET"],
+          },
+        ],
+      },
+      super: {
+        role: "super",
+        rules: [
+          {
+            path: "/data/users",
+            method: ["GET"],
+          },
+          {
+            path: "/data/ascriptions",
+            method: ["GET"],
+          },
+          {
+            path: "/data/rules",
+            method: ["GET"],
+          },
+          {
+            path: "/matters/query",
+            method: ["POST"],
+          },
+          {
+            path: "/matters",
+            method: ["GET", "POST", "PUT", "DELETE"],
+          },
+          {
+            path: "/weeklys",
+            method: ["GET", "POST", "PUT", "DELETE"],
+          },
+          {
+            path: "/weeklys/staff",
+            method: ["GET", "POST", "PUT", "DELETE"],
+          },
+          {
+            path: "/weeklys/staff/list",
+            method: ["GET"],
           },
         ],
       },

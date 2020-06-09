@@ -28,7 +28,6 @@ const staffWeeklySchema = new Schema(
     // 本周计划
     plan: {
       type: String,
-      required: true,
     },
     // 周报时间
     time: {

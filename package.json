@@ -4,9 +4,10 @@
   "description": "express-starter",
   "main": "app.js",
   "scripts": {
-    "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
+    "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log,./yarn.lock,./commitlint.config,./package-lock.json,./README.md --copy-files",
     "start": "npm run build && node dist/bin/www.js",
-    "pretest": "eslint .",
+    "test": "jest",
+    "check": "eslint .",
     "precheck": "prettier --write *.{js,json,html,css,md}"
   },
   "husky": {
@@ -55,6 +56,7 @@
     "eslint-plugin-prettier": "^3.1.3",
     "express-swagger-generator": "^1.1.17",
     "husky": "^4.2.5",
+    "jest": "^26.0.1",
     "lint-staged": "^10.2.6",
     "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
