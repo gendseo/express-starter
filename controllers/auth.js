@@ -28,7 +28,7 @@ exports.login = async (req, res) => {
       return res.send("用户名或密码错误");
     }
   } catch (err) {
-    return res.send("登录时发生错误！");
+    return res.send("登录时发生错误");
   }
 };
 
@@ -51,7 +51,7 @@ exports.loginWithoutCrypt = async (req, res) => {
       return res.send("用户名或密码错误");
     }
   } catch (err) {
-    return res.send("登录时发生错误！");
+    return res.send("登录时发生错误");
   }
 };
 
@@ -81,7 +81,7 @@ exports.register = async (req, res) => {
     req.session.name = nu.name;
     return res.send(nu);
   } catch (err) {
-    return res.send("注册时发生错误！");
+    return res.send("注册时发生错误");
   }
 };
 
@@ -111,7 +111,7 @@ exports.registerWithoutCrypt = async (req, res) => {
     req.session.name = nu.name;
     return res.send(nu);
   } catch (err) {
-    return res.send("注册时发生错误！");
+    return res.send("注册时发生错误");
   }
 };
 

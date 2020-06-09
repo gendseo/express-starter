@@ -10,7 +10,7 @@ import Matter from "../models/matter";
 
 exports.queryMatter = async (req, res) => {
   if (Object.keys(req.body).length === 0) {
-    return res.send(`matter 查询参数非法！`);
+    return res.send(`matter 查询参数非法`);
   }
   try {
     // 构造查询条件
@@ -45,7 +45,7 @@ exports.createMatter = async (req, res) => {
   let matterJSON = req.body;
   console.log(matterJSON);
   if (!validationMatterJSON(matterJSON)) {
-    return res.send("字段非法！");
+    return res.send("字段非法");
   }
   let m = new Matter({
     title: matterJSON.title,
@@ -67,11 +67,11 @@ exports.createMatter = async (req, res) => {
 // 更新一个matter
 exports.updateMatter = async (req, res) => {
   if (!req.params.id) {
-    return res.send(`id参数非法！`);
+    return res.send(`id参数非法`);
   }
   let matterJSON = req.body;
   if (!validationMatterJSON(matterJSON)) {
-    return res.send("字段非法！");
+    return res.send("字段非法");
   }
   try {
     await Matter.update(
@@ -89,22 +89,22 @@ exports.updateMatter = async (req, res) => {
         update_time: new Date(),
       }
     );
-    res.send(`matter id=${req.params.id} 更新成功！`);
+    res.send(`matter id=${req.params.id} 更新成功`);
   } catch (err) {
-    res.send(`matter id=${req.params.id} 更新失败！`);
+    res.send(`matter id=${req.params.id} 更新失败`);
   }
 };
 
 // 删除一个matter
 exports.deleteMatter = async (req, res) => {
   if (!req.params.id) {
-    return res.send(`id参数非法！`);
+    return res.send(`id参数非法`);
   }
   try {
     await Matter.remove({ _id: req.params.id });
-    res.send(`matter id=${req.params.id} 删除成功！`);
+    res.send(`matter id=${req.params.id} 删除成功`);
   } catch (err) {
-    res.send(`matter id=${req.params.id} 删除失败！`);
+    res.send(`matter id=${req.params.id} 删除失败`);
   }
 };
 

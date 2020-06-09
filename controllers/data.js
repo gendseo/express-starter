@@ -41,7 +41,7 @@ exports.queryRules = async (req, res) => {
   try {
     let u = await userModel.findOne({ account: Encrypt(req.session.account) }, { password: 0 });
     if (!u) {
-      return res.send("未登录！");
+      return res.send("未登录");
     }
     let rules = await authModel.findOne({ role: u.role }, { _id: 0 });
     return res.json(rules);

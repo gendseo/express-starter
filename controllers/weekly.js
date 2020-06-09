@@ -13,7 +13,7 @@ exports.getWeeklys = async (req, res) => {
   let month = Number(req.query.month);
   let week = Number(req.query.week);
   if (!year || !month || !week) {
-    return res.send(`query 参数非法！`);
+    return res.send(`query 参数非法`);
   }
   console.log(year, month, week);
   try {
@@ -53,13 +53,13 @@ exports.createWeekly = async (req, res) => {
 
 exports.deleteWeekly = async (req, res) => {
   if (!req.params.id) {
-    return res.send(`id参数非法！`);
+    return res.send(`id参数非法`);
   }
   try {
     await Weekly.remove({ _id: req.params.id });
-    return res.send(`weekly id=${req.params.id} 删除成功！`);
+    return res.send(`weekly id=${req.params.id} 删除成功`);
   } catch (err) {
-    return res.send(`weekly id=${req.params.id} 删除失败！`);
+    return res.send(`weekly id=${req.params.id} 删除失败`);
   }
 };
 
@@ -74,7 +74,7 @@ exports.updateWeekly = async (req, res) => {
   try {
     let w = await Weekly.findOne({ _id: req.params.id });
     if (!w) {
-      return res.send(`weekly id=${req.params.id} 该记录不存在！`);
+      return res.send(`weekly id=${req.params.id} 该记录不存在`);
     }
     console.log(weeklyJSON);
     let merge = diffAndMergeObject(weeklyJSON, w);
@@ -240,10 +240,10 @@ exports.updateWeekly = async (req, res) => {
         }
       }
     }
-    return res.send(`weekly id=${req.params.id} 更新成功！`);
+    return res.send(`weekly id=${req.params.id} 更新成功`);
   } catch (err) {
     console.log(err);
-    return res.send(`weekly id=${req.params.id} 更新失败！`);
+    return res.send(`weekly id=${req.params.id} 更新失败`);
   }
 };
 

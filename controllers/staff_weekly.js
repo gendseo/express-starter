@@ -12,7 +12,7 @@ exports.queryStaffWeeklyList = async (req, res) => {
   let month = Number(req.query.month);
   let week = Number(req.query.week);
   if (!year || !month || !week) {
-    return res.send(`query 参数非法！`);
+    return res.send(`query 参数非法`);
   }
   try {
     let weeklys = await StaffWeekly.find({ time: { year: year, month: month, week: week } });
@@ -27,7 +27,7 @@ exports.queryStaffWeekly = async (req, res) => {
   let month = Number(req.query.month);
   let week = Number(req.query.week);
   if (!year || !month || !week) {
-    return res.send(`query 参数非法！`);
+    return res.send(`query 参数非法`);
   }
   try {
     let weeklys = await StaffWeekly.find({ time: { year: year, month: month, week: week }, name: req.session.name });
@@ -77,7 +77,7 @@ exports.updateStaffWeekly = async (req, res) => {
     return res.json();
   } catch (err) {
     console.log(err);
-    res.send(`人员周报 id=${req.params.id} 更新失败！`);
+    res.send(`人员周报 id=${req.params.id} 更新失败`);
   }
 };
 
@@ -87,9 +87,9 @@ exports.deleteStaffWeekly = async (req, res) => {
   }
   try {
     await StaffWeekly.remove({ _id: req.params.id });
-    res.send(`人员周报 id=${req.params.id} 删除成功！`);
+    res.send(`人员周报 id=${req.params.id} 删除成功`);
   } catch (err) {
-    res.send(`人员周报 id=${req.params.id} 删除失败！`);
+    res.send(`人员周报 id=${req.params.id} 删除失败`);
   }
 };
 
