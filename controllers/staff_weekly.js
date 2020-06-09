@@ -105,8 +105,18 @@ function validationCreateStaffWeekly(staffWeekly) {
   }
   let weeks = ["week1", "week2", "week3", "week4", "week5", "week6", "week7"];
   for (const week of weeks) {
-    if (!staffWeekly[week] || !staffWeekly[week].target || !StaffWeekly[week].reach) {
+    if (!staffWeekly[week] || !staffWeekly[week].target || !staffWeekly[week].reach) {
       return false;
+    }
+    for (const i of staffWeekly[week].target) {
+      if (!i.task || !i.product || !i.type || !i.work) {
+        return false;
+      }
+    }
+    for (const i of staffWeekly[week].reach) {
+      if (!i.task || !i.product || !i.type || !i.work) {
+        return false;
+      }
     }
   }
   return true;
